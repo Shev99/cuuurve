@@ -3,12 +3,35 @@ from matrix import *
 
 
 def add_circle( points, cx, cy, cz, r, step ):
-    pass
+    t = 0
+    tempX =  cx + r
+    tempY = cy
+    while(t <= 1 + step):
+        x = r * math.cos(2 * math.pi * t) + cx
+        y = r * math.sin(2 * math.pi * t) + cy
+        add_edge(points, tempX, tempY, cz, x, y, cz)
+        tempX = x
+        tempY = y
+        t += step
+
 
 def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
-    pass
-
-
+    oldX = x0
+    oldY = y0
+    t = 0
+    if curve_type == 0:
+        x = generate_curve_coefs(x0,x1,x2,x3,0)
+        y = generate_curve_coefs(y0,y1,y2,y3,0)
+    else:
+        x = generate_curve_coefs(x0,x1,x2,x3,1)
+        y = generate_curve_coefs(y0,y1,y2,y3,1)
+    while (t<1+step):
+        ansX = x[0][0]*t*t*t + x[0][1]*t*t + x[0][2]*t + x[0][3]
+        ansY = y[0][0]*t*t*t + y[0][1]*t*t + y[0][2]*t + y[0][3]
+        add_edge(points, oldX, oldY, 0, ansX, ansY, 0)
+        oldX = ansX
+        oldY = ansY
+        t += step
 
 def draw_lines( matrix, screen, color ):
     if len(matrix) < 2:
